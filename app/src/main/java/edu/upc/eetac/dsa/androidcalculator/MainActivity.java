@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    int start = 1, pos = 0, num = 0, firstDigit = 0;
+    int start = 1, pos = 0, num = 0, firstDigit = 1, posInicial = 1;
     float result;
     String[] operations = new String[3];
 
@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 operations[0] = "null"; operations[1] = "null"; operations[2] = "null";
 
                 start = 1;
+                posInicial = 1;
+                firstDigit = 1;
             }
         });
 
@@ -200,59 +202,76 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public String UpdateText(String information, String digit)
-    {
+    public String UpdateText(String information, String digit) {
         float op;
 
-        if(start == 1) {
+        if (start == 1) {
+
             information = "";
+            start = 0;
         }
 
-        if(num < 24)
-        {
+        if (num < 24) {
+
             information = information.replace("  ", "");
             information = information + digit + "  ";
 
-            if((digit == "+") || (digit == "-") || (digit == "×") || (digit == "/") || (digit == "sin(") || (digit == "cos(") || (digit == "tan(")) {
+            if((digit == "+") || (digit == "-") || (digit == "×") || (digit == "/")) {
+
+                firstDigit = 1;
                 operations[1] = digit;
-                firstDigit = 0;
-                pos = 2;
-            }
-            else if(pos == 0)
-            {
-                if(start == 1) {
-                    operations[0] = digit;
-                    result = Float.parseFloat(digit);
-                    start = 0;
+
+                if (posInicial == 1) {
+
+                    posInicial = 0;
                 }
                 else {
-                    operations[0] = operations[0] + Float.parseFloat(digit);
-                    result = result + Float.parseFloat(digit);
+                    operations[0] = Float.toString(result);
                 }
             }
-            else if(pos == 2)
-            {
-                if(firstDigit == 0) {
+            else if(posInicial == 1) {
+
+                if(firstDigit == 1) {
+
+                    operations[0] = digit;
+                    result = Float.parseFloat(operations[0]);
+                    firstDigit = 0;
+                }
+                else {
+                    operations[0] = operations[0] + digit;
+                    result = Float.parseFloat(operations[0]);
+                }
+            }
+            else if(posInicial == 0) {
+
+                if (firstDigit == 1) {
+
                     operations[2] = digit;
-                    firstDigit = 1;
+                    firstDigit = 0;
                 }
                 else {
                     operations[2] = operations[2] + digit;
                 }
 
+                /// Calculating ///
+
                 if (operations[1] == "+") {
+
                     op = Float.parseFloat(operations[0]) + Float.parseFloat(operations[2]);
                     result = op;
                 }
-                if (operations[1] == "-") {
+                else if (operations[1] == "-") {
+
                     op = Float.parseFloat(operations[0]) - Float.parseFloat(operations[2]);
                     result = op;
                 }
-                if (operations[1] == "×") {
+                else if (operations[1] == "×") {
+
                     op = Float.parseFloat(operations[0]) * Float.parseFloat(operations[2]);
                     result = op;
                 }
-                if (operations[1] == "/") {
+                else if (operations[1] == "/") {
+
                     op = Float.parseFloat(operations[0]) / Float.parseFloat(operations[2]);
                     result = op;
                 }
