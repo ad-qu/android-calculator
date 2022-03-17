@@ -3,12 +3,13 @@ package edu.upc.eetac.dsa.androidcalculator;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.TextView;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    int start = 1, pos = 0, num = 0, firstDigit = 1, posInitial = 1, sctMode = 0;
+    int start = 1, pos = 0, num = 0, firstDigit = 1, posInitial = 1, sctMode = 0, sMode = 0, cMode = 0, tMode = 0, DR = 0;
     float result;
     String[] operations = new String[3];
 
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         Button btn_sin = (Button) findViewById(R.id.button_sin);
         Button btn_cos = (Button) findViewById(R.id.button_cos);
         Button btn_tan = (Button) findViewById(R.id.button_tan);
+        Button btn_dr = (Button) findViewById(R.id.button_decrad);
+
+
 
         btn_0.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,18 +133,21 @@ public class MainActivity extends AppCompatActivity {
                 textResult.setText("0  ");
                 textPreview.setText("");
 
-                operations[0] = "null"; operations[1] = "null"; operations[2] = "null";
-
                 start = 1;
                 posInitial = 1;
                 firstDigit = 1;
+                sctMode = 0; sMode = 0; cMode = 0; tMode = 0;
+
+                btn_sum.setEnabled(true); btn_sub.setEnabled(true); btn_mul.setEnabled(true);
+                btn_div.setEnabled(true); btn_sin.setEnabled(true); btn_cos.setEnabled(true);
+                btn_tan.setEnabled(true); btn_dr.setVisibility(View.INVISIBLE);
             }
         });
 
         btn_com.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textResult.setText(UpdateText(textResult.getText().toString(), ","));
+                textResult.setText(UpdateText(textResult.getText().toString(), "."));
             }
         });
 
@@ -149,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 textResult.setText(textPreview.getText() + "  ");
                 textPreview.setText("");
+
+                start = 1;
+                posInitial = 1;
+                firstDigit = 1;
             }
         });
 
@@ -183,21 +194,96 @@ public class MainActivity extends AppCompatActivity {
         btn_sin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textResult.setText(UpdateText(textResult.getText().toString(), "sin("));
+
+                if(sctMode == 0) {
+
+                    btn_sum.setEnabled(false); btn_sub.setEnabled(false); btn_mul.setEnabled(false);
+                    btn_div.setEnabled(false); btn_cos.setEnabled(false); btn_tan.setEnabled(false);
+
+                    sctMode = 1; sMode = 1; btn_dr.setVisibility(View.VISIBLE);
+
+                    textResult.setText(UpdateText(textResult.getText().toString(), "sin("));
+                    textPreview.setText("= " + result);
+                }
+                else {
+                    btn_sum.setEnabled(true); btn_sub.setEnabled(true); btn_mul.setEnabled(true);
+                    btn_div.setEnabled(true); btn_cos.setEnabled(true); btn_tan.setEnabled(true);
+
+                    textResult.setText("0  ");
+                    textPreview.setText("");
+
+                    start = 1;
+                    posInitial = 1;
+                    firstDigit = 1;
+                    sctMode = 0; sMode = 0; btn_dr.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
         btn_cos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textResult.setText(UpdateText(textResult.getText().toString(), "cos("));
+
+                if(sctMode == 0) {
+
+                    btn_sum.setEnabled(false); btn_sub.setEnabled(false); btn_mul.setEnabled(false);
+                    btn_div.setEnabled(false); btn_sin.setEnabled(false); btn_tan.setEnabled(false);
+
+                    sctMode = 1; cMode = 1; btn_dr.setVisibility(View.VISIBLE);
+
+                    textResult.setText(UpdateText(textResult.getText().toString(), "cos("));
+                    textPreview.setText("= " + result);
+                }
+                else {
+                    btn_sum.setEnabled(true); btn_sub.setEnabled(true); btn_mul.setEnabled(true);
+                    btn_div.setEnabled(true); btn_sin.setEnabled(true); btn_tan.setEnabled(true);
+
+                    textResult.setText("0  ");
+                    textPreview.setText("");
+
+                    start = 1;
+                    posInitial = 1;
+                    firstDigit = 1;
+                    sctMode = 0; cMode = 0; btn_dr.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
         btn_tan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textResult.setText(UpdateText(textResult.getText().toString(), "tan("));
+
+                if(sctMode == 0) {
+
+                    btn_sum.setEnabled(false); btn_sub.setEnabled(false); btn_mul.setEnabled(false);
+                    btn_div.setEnabled(false); btn_sin.setEnabled(false); btn_cos.setEnabled(false);
+
+                    sctMode = 1; tMode = 1; btn_dr.setVisibility(View.VISIBLE);
+
+                    textResult.setText(UpdateText(textResult.getText().toString(), "tan("));
+                    textPreview.setText("= " + result);
+                }
+                else {
+                    btn_sum.setEnabled(true); btn_sub.setEnabled(true); btn_mul.setEnabled(true);
+                    btn_div.setEnabled(true); btn_sin.setEnabled(true); btn_cos.setEnabled(true);
+
+                    textResult.setText("0  ");
+                    textPreview.setText("");
+
+                    start = 1;
+                    posInitial = 1;
+                    firstDigit = 1;
+                    sctMode = 0; tMode = 0; btn_dr.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        btn_dr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(DR == 1) { DR = 0; }
+                else { DR = 1; }
             }
         });
     }
@@ -216,78 +302,116 @@ public class MainActivity extends AppCompatActivity {
             information = information.replace("  ", "");
             information = information + digit + "  ";
 
-            if((digit == "+") || (digit == "-") || (digit == "×") || (digit == "/")) {
+            if(sctMode == 0) {
 
-                firstDigit = 1;
-                operations[1] = digit;
+                if ((digit == "+") || (digit == "-") || (digit == "×") || (digit == "/")) {
 
-                if (posInitial == 1) {
+                    firstDigit = 1;
+                    operations[1] = digit;
 
+                    if (posInitial == 1) {
+
+                        posInitial = 0;
+                    } else {
+                        operations[0] = Float.toString(result);
+                    }
+                } else if (posInitial == 1) {
+
+                    if (firstDigit == 1) {
+
+                        operations[0] = digit;
+                        result = Float.parseFloat(operations[0]);
+                        firstDigit = 0;
+                    } else {
+                        operations[0] = operations[0] + digit;
+                        result = Float.parseFloat(operations[0]);
+                    }
+                } else if (posInitial == 0) {
+
+                    if (firstDigit == 1) {
+
+                        operations[2] = digit;
+                        firstDigit = 0;
+                    }
+                    else {
+                        operations[2] = operations[2] + digit;
+                    }
+
+                    /// Calculating ///
+
+                    if (operations[1] == "+") {
+
+                        op = Float.parseFloat(operations[0]) + Float.parseFloat(operations[2]);
+                        result = op;
+                    } else if (operations[1] == "-") {
+
+                        op = Float.parseFloat(operations[0]) - Float.parseFloat(operations[2]);
+                        result = op;
+                    } else if (operations[1] == "×") {
+
+                        op = Float.parseFloat(operations[0]) * Float.parseFloat(operations[2]);
+                        result = op;
+                    } else if (operations[1] == "/") {
+
+                        op = Float.parseFloat(operations[0]) / Float.parseFloat(operations[2]);
+                        result = op;
+                    }
+                }
+            }
+
+            else {
+
+                if(posInitial == 1)
+                {
+                    operations[0] = digit;
                     posInitial = 0;
                 }
                 else {
-                    operations[0] = Float.toString(result);
-                }
-            }
-            else if(posInitial == 1) {
+                    if (firstDigit == 1) {
 
-                if(firstDigit == 1) {
+                        operations[1] = digit;
+                        firstDigit = 0;
+                    }
+                    else {
+                        operations[1] = operations[1] + digit;
+                    }
 
-                    operations[0] = digit;
-                    result = Float.parseFloat(operations[0]);
-                    firstDigit = 0;
-                }
-                else {
-                    operations[0] = operations[0] + digit;
-                    result = Float.parseFloat(operations[0]);
-                }
-            }
-            else if(posInitial == 0) {
+                    if(sMode == 1) {
 
-                if (firstDigit == 1) {
+                        if(DR == 1) {
+                            op = (float) Math.toRadians(Math.sin(Double.parseDouble(operations[1])));
+                        }
+                        else {
+                            op = (float) Math.tan(Double.parseDouble(operations[1]));
+                        }
+                        result = op;
+                    }
 
-                    operations[2] = digit;
-                    firstDigit = 0;
-                }
-                else {
-                    operations[2] = operations[2] + digit;
-                }
+                    if(cMode == 1) {
 
-                /// Calculating ///
+                        if(DR == 1) {
+                            op = (float) Math.toRadians(Math.cos(Double.parseDouble(operations[1])));
+                        }
+                        else {
+                            op = (float) Math.tan(Double.parseDouble(operations[1]));
+                        }
+                        result = op;
+                    }
 
-                if (operations[1] == "+") {
+                    if(tMode == 1) {
 
-                    op = Float.parseFloat(operations[0]) + Float.parseFloat(operations[2]);
-                    result = op;
-                }
-                else if (operations[1] == "-") {
-
-                    op = Float.parseFloat(operations[0]) - Float.parseFloat(operations[2]);
-                    result = op;
-                }
-                else if (operations[1] == "×") {
-
-                    op = Float.parseFloat(operations[0]) * Float.parseFloat(operations[2]);
-                    result = op;
-                }
-                else if (operations[1] == "/") {
-
-                    op = Float.parseFloat(operations[0]) / Float.parseFloat(operations[2]);
-                    result = op;
+                        if(DR == 1) {
+                            op = (float) Math.toRadians(Math.tan(Double.parseDouble(operations[1])));
+                        }
+                        else {
+                            op = (float) Math.tan(Double.parseDouble(operations[1]));
+                        }
+                        result = op;
+                    }
                 }
             }
             num++;
         }
         return information;
-    }
-
-    public void DesignUpdate()
-    {
-        //IF PARA PONER EN INV SI SCT DESACTIVADO
-        //PONER BOTONES DE +-*/ EN DISABLE
-        //SCT = 1
-        //ELSE TOT AL REVES
-
-        //DESPUES FALTARIA PONER UN IF GIGANTE EN LA FUNCION DE ARRIBA CON SCT
     }
 }
