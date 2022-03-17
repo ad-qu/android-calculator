@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    int start = 1, pos = 0, num = 0, firstDigit = 1, posInicial = 1;
+    int start = 1, pos = 0, num = 0, firstDigit = 1, posInitial = 1, sctMode = 0;
     float result;
     String[] operations = new String[3];
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 operations[0] = "null"; operations[1] = "null"; operations[2] = "null";
 
                 start = 1;
-                posInicial = 1;
+                posInitial = 1;
                 firstDigit = 1;
             }
         });
@@ -221,15 +221,15 @@ public class MainActivity extends AppCompatActivity {
                 firstDigit = 1;
                 operations[1] = digit;
 
-                if (posInicial == 1) {
+                if (posInitial == 1) {
 
-                    posInicial = 0;
+                    posInitial = 0;
                 }
                 else {
                     operations[0] = Float.toString(result);
                 }
             }
-            else if(posInicial == 1) {
+            else if(posInitial == 1) {
 
                 if(firstDigit == 1) {
 
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     result = Float.parseFloat(operations[0]);
                 }
             }
-            else if(posInicial == 0) {
+            else if(posInitial == 0) {
 
                 if (firstDigit == 1) {
 
@@ -279,5 +279,15 @@ public class MainActivity extends AppCompatActivity {
             num++;
         }
         return information;
+    }
+
+    public void DesignUpdate()
+    {
+        //IF PARA PONER EN INV SI SCT DESACTIVADO
+        //PONER BOTONES DE +-*/ EN DISABLE
+        //SCT = 1
+        //ELSE TOT AL REVES
+
+        //DESPUES FALTARIA PONER UN IF GIGANTE EN LA FUNCION DE ARRIBA CON SCT
     }
 }
